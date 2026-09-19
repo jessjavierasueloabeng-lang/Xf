@@ -1,0 +1,273 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro & Perfil</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#172033}
+header{background:#0d47a1;color:#fff;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:20px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:21px}nav button{background:transparent;border:0;color:#fff;font-weight:bold;margin-left:8px;cursor:pointer;padding:8px}
+.container{max-width:1100px;margin:30px auto;padding:0 18px}.card{background:#fff;border-radius:16px;padding:25px;box-shadow:0 5px 20px #00000012;margin-bottom:20px}
+h2{margin-top:0}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.full{grid-column:1/-1}label{display:block;font-weight:bold;margin-bottom:6px}
+input,select{width:100%;padding:12px;border:1px solid #ccd4e0;border-radius:9px;font-size:15px;background:#fff}
+button.primary{background:#0d47a1;color:#fff;border:0;border-radius:9px;padding:12px 18px;font-weight:bold;cursor:pointer}
+button.secondary{background:#e8eef8;color:#0d47a1;border:0;border-radius:9px;padding:10px 15px;font-weight:bold;cursor:pointer}
+button.danger{background:#c62828;color:#fff;border:0;border-radius:8px;padding:8px 12px;cursor:pointer}
+.hidden{display:none!important}.msg{padding:12px;border-radius:9px;margin-bottom:15px;background:#eef5ff}.error{background:#ffeded;color:#a00000}
+.photo-wrap{text-align:center;margin-bottom:18px}.photo{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid #e3ebf8;background:#edf2f9;display:block;margin:0 auto 10px}
+.profile{display:grid;grid-template-columns:180px 1fr;gap:25px;align-items:start}.profile img{width:160px;height:160px;border-radius:18px;object-fit:cover}
+.info{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.info div{background:#f6f8fc;padding:12px;border-radius:9px}.info b{display:block;font-size:12px;color:#687386;margin-bottom:4px}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:800px}th,td{padding:11px;border-bottom:1px solid #e5e9f0;text-align:left}th{background:#f5f7fa}.thumb{width:45px;height:45px;border-radius:50%;object-fit:cover}.actions{display:flex;gap:7px;flex-wrap:wrap}
+.creator{text-align:center;padding:45px 20px}.creator .logo{width:100px;height:100px;border-radius:50%;margin:auto;background:#0d47a1;color:white;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:bold}
+footer{text-align:center;color:#6d7685;padding:25px}
+@media(max-width:700px){.grid,.info{grid-template-columns:1fr}.profile{grid-template-columns:1fr;text-align:center}.profile .info{text-align:left}header{flex-direction:column;align-items:flex-start}nav{width:100%;display:flex;flex-wrap:wrap}nav button{margin:0 5px 0 0}.container{margin-top:18px}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="appName">Mi Plataforma</h1>
+  <nav>
+    <button onclick="showPage('home')">Inicio</button>
+    <button onclick="showPage('register')">Registrarse</button>
+    <button onclick="showPage('login')">Iniciar sesión</button>
+    <button onclick="showPage('profile')">Mi perfil</button>
+    <button onclick="showPage('admin')">Registros</button>
+    <button onclick="showPage('creator')">Página oficial</button>
+  </nav>
+</header>
+
+<main class="container">
+
+<section id="home" class="page">
+  <div class="card" style="text-align:center;padding:50px 25px">
+    <h2>Bienvenido</h2>
+    <p>Registra tu información, crea tu perfil y administra tus datos desde un solo lugar.</p>
+    <button class="primary" onclick="showPage('register')">Crear una cuenta</button>
+  </div>
+</section>
+
+<section id="register" class="page hidden">
+  <div class="card">
+    <h2>Crear una cuenta</h2>
+    <div id="registerMsg"></div>
+    <form id="registerForm">
+      <div class="photo-wrap">
+        <img id="preview" class="photo" alt="Foto de perfil">
+        <input id="photo" type="file" accept="image/png,image/jpeg,image/webp">
+        <small>Selecciona una foto de perfil (opcional).</small>
+      </div>
+      <div class="grid">
+        <div><label>Nombre *</label><input id="firstName" required></div>
+        <div><label>Apellido *</label><input id="lastName" required></div>
+        <div><label>Fecha de nacimiento *</label><input id="birthDate" type="date" required></div>
+        <div><label>Estado civil *</label><select id="maritalStatus" required><option value="">Seleccionar</option><option>Soltero/a</option><option>Casado/a</option><option>Divorciado/a</option><option>Viudo/a</option><option>Otro</option></select></div>
+        <div><label>País de residencia *</label><input id="country" required></div>
+        <div><label>Nacionalidad *</label><input id="nationality" required></div>
+        <div><label>Ciudad</label><input id="city"></div>
+        <div><label>Profesión / ocupación</label><input id="occupation"></div>
+        <div><label>Email *</label><input id="email" type="email" required></div>
+        <div><label>Teléfono *</label><input id="phone" type="tel" required></div>
+        <div><label>Contraseña *</label><input id="password" type="password" minlength="6" required></div>
+        <div><label>Confirmar contraseña *</label><input id="confirmPassword" type="password" minlength="6" required></div>
+      </div>
+      <br><button class="primary" type="submit">Registrarme</button>
+    </form>
+  </div>
+</section>
+
+<section id="login" class="page hidden">
+  <div class="card" style="max-width:500px;margin:auto">
+    <h2>Iniciar sesión</h2>
+    <div id="loginMsg"></div>
+    <form id="loginForm">
+      <label>Email</label><input id="loginEmail" type="email" required><br><br>
+      <label>Contraseña</label><input id="loginPassword" type="password" required><br><br>
+      <button class="primary">Entrar</button>
+    </form>
+  </div>
+</section>
+
+<section id="profile" class="page hidden">
+  <div class="card">
+    <h2>Mi perfil</h2>
+    <div id="profileContent"></div>
+  </div>
+</section>
+
+<section id="admin" class="page hidden">
+  <div class="card">
+    <h2>Panel de registros</h2>
+    <p><b id="totalUsers">0</b> registros guardados en este navegador.</p>
+    <input id="search" placeholder="Buscar por nombre, email, país o nacionalidad..." oninput="renderUsers()">
+    <br><br>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Foto</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>País</th><th>Nacionalidad</th><th>Acciones</th></tr></thead>
+      <tbody id="usersBody"></tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="creator" class="page hidden">
+  <div class="card creator">
+    <div class="logo">M</div>
+    <h2>Página oficial del creador</h2>
+    <p><b>Mi Plataforma</b></p>
+    <p>Espacio oficial para gestionar registros, perfiles y comunicación.</p>
+    <p>Contacto: <span id="creatorEmail">contacto@ejemplo.com</span></p>
+    <button class="primary" onclick="window.open('https://wa.me/','_blank')">Contactar por WhatsApp</button>
+  </div>
+</section>
+
+</main>
+
+<footer>© <span id="year"></span> Mi Plataforma — Todos los derechos reservados.</footer>
+
+<script>
+const KEY='mi_plataforma_users_v1';
+const SESSION='mi_plataforma_session_v1';
+const defaultPhoto='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="100%" height="100%" fill="#edf2f9"/><circle cx="150" cy="115" r="55" fill="#aab6c8"/><path d="M55 280c12-68 58-94 95-94s83 26 95 94" fill="#aab6c8"/></svg>`);
+
+document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('preview').src=defaultPhoto;
+
+function users(){return JSON.parse(localStorage.getItem(KEY)||'[]')}
+function saveUsers(u){localStorage.setItem(KEY,JSON.stringify(u))}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  if(id==='profile') renderProfile();
+  if(id==='admin') renderUsers();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function currentUser(){
+  const id=localStorage.getItem(SESSION);
+  return users().find(u=>u.id===id);
+}
+function msg(id,text,error=false){document.getElementById(id).innerHTML=text?`<div class="msg ${error?'error':''}">${text}</div>`:''}
+
+document.getElementById('photo').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f)return;
+  if(f.size>2*1024*1024){msg('registerMsg','La foto no puede superar 2 MB.',true);e.target.value='';return}
+  const r=new FileReader();r.onload=()=>document.getElementById('preview').src=r.result;r.readAsDataURL(f);
+});
+
+document.getElementById('registerForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const pass=document.getElementById('password').value;
+ const confirm=document.getElementById('confirmPassword').value;
+ if(pass!==confirm){msg('registerMsg','Las contraseñas no coinciden.',true);return}
+ const us=users(), email=document.getElementById('email').value.trim().toLowerCase();
+ if(us.some(u=>u.email===email)){msg('registerMsg','Este email ya está registrado.',true);return}
+ const user={
+  id:crypto.randomUUID(),photo:document.getElementById('preview').src,
+  firstName:firstName.value.trim(),lastName:lastName.value.trim(),birthDate:birthDate.value,
+  maritalStatus:maritalStatus.value,country:country.value.trim(),nationality:nationality.value.trim(),
+  city:city.value.trim(),occupation:occupation.value.trim(),email,phone:phone.value.trim(),password:pass,
+  createdAt:new Date().toISOString()
+ };
+ us.push(user);saveUsers(us);localStorage.setItem(SESSION,user.id);
+ msg('registerMsg','Registro realizado correctamente.');
+ e.target.reset();document.getElementById('preview').src=defaultPhoto;
+ setTimeout(()=>showPage('profile'),500);
+});
+
+document.getElementById('loginForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const u=users().find(x=>x.email===loginEmail.value.trim().toLowerCase() && x.password===loginPassword.value);
+ if(!u){msg('loginMsg','Email o contraseña incorrectos.',true);return}
+ localStorage.setItem(SESSION,u.id);msg('loginMsg','Sesión iniciada.');
+ setTimeout(()=>showPage('profile'),300);
+});
+
+function renderProfile(){
+ const u=currentUser(), box=document.getElementById('profileContent');
+ if(!u){box.innerHTML='<p>No hay una sesión iniciada.</p><button class="primary" onclick="showPage(\\'login\\')">Iniciar sesión</button>';return}
+ box.innerHTML=`
+ <div class="profile">
+   <div><img src="${escapeAttr(u.photo||defaultPhoto)}" alt="Foto de perfil">
+   <br><button class="secondary" onclick="changePhoto()">Cambiar foto</button>
+   <input id="changePhotoInput" type="file" accept="image/png,image/jpeg,image/webp" hidden></div>
+   <div>
+    <h3>${escapeHtml(u.firstName)} ${escapeHtml(u.lastName)}</h3>
+    <div class="info">
+      ${info('Fecha de nacimiento',u.birthDate)}${info('Estado civil',u.maritalStatus)}
+      ${info('País de residencia',u.country)}${info('Nacionalidad',u.nationality)}
+      ${info('Ciudad',u.city||'-')}${info('Profesión',u.occupation||'-')}
+      ${info('Email',u.email)}${info('Teléfono',u.phone)}
+    </div>
+    <br><button class="secondary" onclick="editProfile()">Editar perfil</button>
+    <button class="secondary" onclick="logout()">Cerrar sesión</button>
+   </div>
+ </div>`;
+}
+function info(a,b){return `<div><b>${a}</b>${escapeHtml(String(b??''))}</div>`}
+function changePhoto(){
+ const inp=document.getElementById('changePhotoInput');inp.click();
+ inp.onchange=()=>{
+  const f=inp.files[0];if(!f)return;
+  if(f.size>2*1024*1024){alert('La foto no puede superar 2 MB.');return}
+  const r=new FileReader();r.onload=()=>{
+   const us=users(),i=us.findIndex(x=>x.id===localStorage.getItem(SESSION));us[i].photo=r.result;saveUsers(us);renderProfile();renderUsers()
+  };r.readAsDataURL(f);
+ }
+}
+function editProfile(){
+ const u=currentUser();
+ document.getElementById('profileContent').innerHTML=`
+ <form onsubmit="saveEdit(event)" class="grid">
+  <div><label>Nombre</label><input id="eFirst" value="${escapeAttr(u.firstName)}" required></div>
+  <div><label>Apellido</label><input id="eLast" value="${escapeAttr(u.lastName)}" required></div>
+  <div><label>Fecha de nacimiento</label><input id="eBirth" type="date" value="${escapeAttr(u.birthDate)}" required></div>
+  <div><label>Estado civil</label><input id="eMarital" value="${escapeAttr(u.maritalStatus)}" required></div>
+  <div><label>País de residencia</label><input id="eCountry" value="${escapeAttr(u.country)}" required></div>
+  <div><label>Nacionalidad</label><input id="eNationality" value="${escapeAttr(u.nationality)}" required></div>
+  <div><label>Ciudad</label><input id="eCity" value="${escapeAttr(u.city)}"></div>
+  <div><label>Profesión</label><input id="eOccupation" value="${escapeAttr(u.occupation)}"></div>
+  <div><label>Email</label><input id="eEmail" type="email" value="${escapeAttr(u.email)}" required></div>
+  <div><label>Teléfono</label><input id="ePhone" value="${escapeAttr(u.phone)}" required></div>
+  <div class="full"><button class="primary">Guardar cambios</button> <button type="button" class="secondary" onclick="renderProfile()">Cancelar</button></div>
+ </form>`;
+}
+function saveEdit(e){
+ e.preventDefault();const us=users(),i=us.findIndex(x=>x.id===localStorage.getItem(SESSION));if(i<0)return;
+ us[i]={...us[i],firstName:eFirst.value.trim(),lastName:eLast.value.trim(),birthDate:eBirth.value,maritalStatus:eMarital.value,country:eCountry.value.trim(),nationality:eNationality.value.trim(),city:eCity.value.trim(),occupation:eOccupation.value.trim(),email:eEmail.value.trim().toLowerCase(),phone:ePhone.value.trim()};
+ saveUsers(us);renderProfile();renderUsers();
+}
+function logout(){localStorage.removeItem(SESSION);showPage('home')}
+function renderUsers(){
+ const all=users(),q=(document.getElementById('search')?.value||'').toLowerCase();
+ const list=all.filter(u=>(u.firstName+' '+u.lastName+' '+u.email+' '+u.country+' '+u.nationality).toLowerCase().includes(q));
+ document.getElementById('totalUsers').textContent=all.length;
+ document.getElementById('usersBody').innerHTML=list.map(u=>`<tr>
+ <td><img class="thumb" src="${escapeAttr(u.photo||defaultPhoto)}"></td>
+ <td>${escapeHtml(u.firstName)} ${escapeHtml(u.lastName)}</td><td>${escapeHtml(u.email)}</td>
+ <td>${escapeHtml(u.phone)}</td><td>${escapeHtml(u.country)}</td><td>${escapeHtml(u.nationality)}</td>
+ <td class="actions"><button class="secondary" onclick="viewUser('${u.id}')">Ver</button><button class="danger" onclick="deleteUser('${u.id}')">Eliminar</button></td>
+ </tr>`).join('') || '<tr><td colspan="7">No hay registros.</td></tr>';
+}
+function viewUser(id){
+ const u=users().find(x=>x.id===id);if(!u)return;
+ document.getElementById('profileContent').innerHTML=`<div class="profile"><div><img src="${escapeAttr(u.photo||defaultPhoto)}"></div><div><h2>${escapeHtml(u.firstName)} ${escapeHtml(u.lastName)}</h2><div class="info">${info('Fecha de nacimiento',u.birthDate)}${info('Estado civil',u.maritalStatus)}${info('País',u.country)}${info('Nacionalidad',u.nationality)}${info('Ciudad',u.city||'-')}${info('Profesión',u.occupation||'-')}${info('Email',u.email)}${info('Teléfono',u.phone)}</div><br><button class="secondary" onclick="showPage('admin')">Volver a registros</button></div></div>`;
+ showPage('profile');
+}
+function deleteUser(id){
+ if(!confirm('¿Eliminar este registro?'))return;
+ saveUsers(users().filter(u=>u.id!==id));
+ if(localStorage.getItem(SESSION)===id)localStorage.removeItem(SESSION);
+ renderUsers();renderProfile();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function escapeAttr(s){return escapeHtml(s)}
+</script>
+</body>
+</html>
+'''
+# Fix accidental escaped quotes in one generated JS string
+html = html.replace("showPage(\\'login\\')", "showPage('login')")
+path = Path("/mnt/data/index.html")
+path.write_text(html, encoding="utf-8")
+print(f"Archivo creado: {path}")
